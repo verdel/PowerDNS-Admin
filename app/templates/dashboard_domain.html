@@ -35,6 +35,11 @@
     </td>
     {% else %}
     <td width="20%">
+    {% if current_user.role.name == 'Administrator' %}
+      <button type="button" class="btn btn-flat btn-success button_template" id="{{ domain.name }}">
+        Template&nbsp;<i class="fa fa-clone"></i>
+      </button>
+    {% endif %}
       <button type="button" class="btn btn-flat btn-success" onclick="window.location.href='{{ url_for('domain', domain_name=domain.name) }}'">
         Manage&nbsp;<i class="fa fa-cog"></i>
       </button>
