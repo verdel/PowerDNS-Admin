@@ -1,13 +1,18 @@
 # PowerDNS-Admin
-PowerDNS Web-GUI - Built by Flask
+A PowerDNS web interface with advanced features.
+[![Build Status](https://travis-ci.org/ngoduykhanh/PowerDNS-Admin.svg?branch=master)](https://travis-ci.org/ngoduykhanh/PowerDNS-Admin)
 
 #### Features:
 - Multiple domain management
-- Local / LDAP user authentication
-- Support Two-factor authentication (TOTP)
+- Domain template
 - User management
 - User access management based on domain
 - User activity logging
+- Local DB / LDAP / Active Directory user authentication
+- Support SAML authentication
+- Google oauth authentication
+- Github oauth authentication
+- Support Two-factor authentication (TOTP)
 - Dashboard and pdns service statistics
 - DynDNS 2 protocol support
 - Edit IPv6 PTRs using IPv6 addresses directly (no more editing of literal addresses!)
@@ -15,10 +20,10 @@ PowerDNS Web-GUI - Built by Flask
 ## Setup
 
 ### PowerDNS Version Support:
-PowerDNS-Admin supports PowerDNS autoritative server versions **3.4.2** and higher. 
+PowerDNS-Admin supports PowerDNS autoritative server versions **3.4.2** and higher.
 
 ### pdns Service
-I assume that you have already installed powerdns service. Make sure that your `/etc/pdns/pdns.conf` has these contents
+I assume that you have already installed pdns service. Make sure that your `pdns.conf` config file has these contents
 
 PowerDNS 4.0.0 and later
 ```
@@ -34,12 +39,13 @@ experimental-api-key=your-powerdns-api-key
 webserver=yes
 ```
 
-This will enable API access in PowerDNS so PowerDNS-Admin can intergrate with PowerDNS.
+This will enable API access in pdns service so PowerDNS-Admin can intergrate with it.
 
 ### Create Database
 We will create a database which used by this web application. Please note that this database is difference from pdns database itself.
 
-You could use any database that SQLAlchemy supports. For example MySQL (you will need to `pip install MySQL-python` to use MySQL backend):
+PowerDNS-Admin supports MySQL server, Maria DB, PostgresQL and SQL Lite.
+
 ```
 MariaDB [(none)]> CREATE DATABASE powerdnsadmin;
 
@@ -48,41 +54,22 @@ MariaDB [(none)]> GRANT ALL PRIVILEGES ON powerdnsadmin.* TO powerdnsadmin@'%' I
 For testing purpose, you could also use SQLite as backend. This way you do not have to install `MySQL-python` dependency.
 
 
-### PowerDNS-Admin
+### Running PowerDNS-Admin
+There are several ways to run PowerDNS-Admin. Following is a simple way to start PowerDNS-Admin with docker in development environment.
 
-In this installation guide, I am using CentOS 7 and run my python stuffs with *virtualenv*. If you don't have it, lets install it:
-```
-$ sudo yum install python-pip
-$ sudo pip install virtualenv
-```
+Firstly, let's edit `configs/developments.py` configuration file.
 
-In your python web app directory, create a `flask` directory via `virtualenv`
-```
-$ virtualenv flask
-```
+Secondly, build the docker image of PowerDNS-Admin
 
-Enable virtualenv and install python 3rd libraries
-```
-$ source ./flask/bin/activate
-(flask)$ pip install -r requirements.txt
-```
+``` $docker-compose -f docker-compose.dev.yml build```
 
-Web application configuration is stored in `config.py` file. Let's clone it from `config_template.py` file and then edit it
-```
-(flask)$ cp config_template.py config.py 
-(flask)$ vim config.py
-```
+Finally, start it
 
-Create database after having proper configs
-```
-(flask)% ./create_db.py
-```
+```$ docker-compose -f docker-compose.dev.yml up```
 
+You can now access PowerDNS-Admin at url http://localhost:9191
 
-Run the application and enjoy!
-```
-(flask)$ ./run.py
-```
+NOTE: For other methods to run PowerDNS-Admin, please take look at WIKI pages.
 
 ### Screenshots
 ![login page](https://github.com/ngoduykhanh/PowerDNS-Admin/wiki/images/readme_screenshots/fullscreen-login.png?raw=true)
@@ -90,4 +77,3 @@ Run the application and enjoy!
 ![create domain page](https://github.com/ngoduykhanh/PowerDNS-Admin/wiki/images/readme_screenshots/fullscreen-domaincreate.png?raw=true)
 ![manage domain page](https://github.com/ngoduykhanh/PowerDNS-Admin/wiki/images/readme_screenshots/fullscreen-domainmanage.png?raw=true)
 ![two-factor authentication config](https://cloud.githubusercontent.com/assets/6447444/16111111/467f2226-33db-11e6-926a-01b4d15035d2.png)
-
